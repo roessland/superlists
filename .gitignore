@@ -4,3 +4,5 @@
 py3env/
 py2env/
 __pycache__/
+db.sqlite3
+ghostdriver.log
