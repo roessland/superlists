@@ -1,5 +1,5 @@
 """
-Django settings for kitchensink project.
+Django settings for superlists project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '9z6a-2@0jp*_%(b(j6$&r0(!)(g1ajct$n%%2&3#gjk4xveo_9'
+SECRET_KEY = 'am)98!be#pi-!3n*@_0qzm@8i008zus_udy$qw3bh^abg4*g=3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -47,9 +47,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'kitchensink.urls'
+ROOT_URLCONF = 'superlists.urls'
 
-WSGI_APPLICATION = 'kitchensink.wsgi.application'
+WSGI_APPLICATION = 'superlists.wsgi.application'
 
 
 # Database
