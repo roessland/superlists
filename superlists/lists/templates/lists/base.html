@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>To-Do lists</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+</head>
+<body>
+    <h1>{% block header_text %}{% endblock %}</h1>
+    <form method="post" action="{% block form_action %}{% endblock %}">
+        <input name="item-text" id="new-item" placeholder="Enter a to-do item"/>
+        {% csrf_token %}
+    </form>
+    {% block table %}
+    {% endblock %}
+</body>
+</html>
