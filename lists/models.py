@@ -6,7 +6,7 @@ class Item(models.Model):
 
     def save(self, *args, **kwargs):
         self.full_clean()
-        super().save(*args, **kwargs)
+        super(Item, self).save(*args, **kwargs)
 
 class List(models.Model):
     pass
