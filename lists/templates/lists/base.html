@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <html>
 <head>
     <title>To-Do lists</title>
@@ -20,7 +21,7 @@
     </div>
 
     <div class="row text-center">
-        <img src="{{ STATIC_URL }}pink_mascot.jpg">
+        <img src="{% static 'pink_mascot.jpg' %}">
     </div>
 </div><!-- /container -->
 </body>
