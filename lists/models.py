@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import resolve_url
 
 class Item(models.Model):
     text = models.TextField()
@@ -9,4 +10,6 @@ class Item(models.Model):
         super(Item, self).save(*args, **kwargs)
 
 class List(models.Model):
-    pass
+
+    def get_absolute_url(self):
+        return resolve_url('view_list', self.id)
