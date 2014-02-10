@@ -1,8 +1,7 @@
 *.pyc
 *.swp
 *.swo
-py3env/
-py2env/
+virtualenv/
 __pycache__/
 db.sqlite3
 ghostdriver.log
