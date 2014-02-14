@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from .models import Item, List
-from .forms import ItemForm, EMPTY_LIST_ERROR
+from .forms import ItemForm, EMPTY_LIST_ERROR, DUPLICATE_ITEM_ERROR
 
 def home_page(request):
     return render(request, "lists/home.html", {'form': ItemForm()})
@@ -18,7 +18,7 @@ def view_list(request, list_id):
                 return redirect(list_)
             except ValidationError:
                 form.errors.update(
-                    {'text': "You've already got this in your list"}
+                    {'text': DUPLICATE_ITEM_ERROR}
                 )
     return render(request, "lists/list.html", {'list': list_, 'form': form})
 

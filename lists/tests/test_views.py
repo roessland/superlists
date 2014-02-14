@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.utils.html import escape
 from ..models import Item, List
 from ..views import home_page
-from ..forms import ItemForm, EMPTY_LIST_ERROR
+from ..forms import ItemForm, EMPTY_LIST_ERROR, DUPLICATE_ITEM_ERROR
 import unittest
 
 class HomePageTest(TestCase):
@@ -130,14 +130,6 @@ class ListViewTest(TestCase):
         self.assertIsInstance(response.context['form'], ItemForm)
         self.assertContains(response, 'name="text"')
 
-    def test_form_save_handles_saving_to_a_list(self):
-        list_ = List.objects.create()
-        form = ItemForm(data={'text': 'testlol'})
-        new_item = form.save(for_list=list_)
-        self.assertEqual(new_item, Item.objects.first())
-        self.assertEqual(new_item.text, 'testlol')
-        self.assertEqual(new_item.list, list_)
-
     def test_duplicate_item_validation_errors_end_up_on_lists_page(self):
         list_ = List.objects.create()
         item = Item.objects.create(list=list_, text="textey")
@@ -146,7 +138,7 @@ class ListViewTest(TestCase):
             data = {'text': "textey"}
         )
 
-        expected_error = escape("You've already got this in your list")
+        expected_error = escape(DUPLICATE_ITEM_ERROR)
         self.assertContains(response, expected_error)
         self.assertTemplateUsed(response, "lists/list.html")
         self.assertEqual(Item.objects.count(), 1)
