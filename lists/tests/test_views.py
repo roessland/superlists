@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.utils.html import escape
 from ..models import Item, List
 from ..views import home_page
-from ..forms import ItemForm
+from ..forms import ItemForm, EMPTY_LIST_ERROR
 import unittest
 
 class HomePageTest(TestCase):
@@ -21,6 +21,11 @@ class HomePageTest(TestCase):
     def test_home_page_uses_item_form(self):
         response = self.client.get('/')
         self.assertIsInstance(response.context['form'], ItemForm)
+
+    def test_invalid_input_means_nothing_saved(self):
+        self.client.post('/lists/new', data={'text': ''})
+        self.assertEqual(Item.objects.count(), 0)
+        self.assertEqual(List.objects.count(), 0)
 
 
 class NewListTest(TestCase):
@@ -42,11 +47,18 @@ class NewListTest(TestCase):
         new_list = List.objects.first()
         self.assertRedirects(response, '/lists/%d/' % (new_list.id,))
 
-    def test_validation_errors_are_sent_back_to_home_page_template(self):
+    def test_for_invalid_input_renders_home_template(self):
         response = self.client.post('/lists/new', data={'text': ''})
         self.assertTemplateUsed(response, 'lists/home.html')
-        expected_error = escape("You can't have an empty list item")
-        self.assertContains(response, expected_error)
+
+    def test_validation_errors_end_up_on_home_page(self):
+        response = self.client.post('/lists/new', data={'text': ''})
+        self.assertContains(response, escape(EMPTY_LIST_ERROR))
+
+    def test_invalid_input_passes_form_to_template(self):
+        response = self.client.post('/lists/new', data={'text': ''})
+        self.assertIsInstance(response.context['form'], ItemForm)
+
 
 
 class ListViewTest(TestCase):
@@ -109,5 +121,19 @@ class ListViewTest(TestCase):
             data={'text': ''}
         )
         self.assertTemplateUsed(response, 'lists/list.html')
-        expected_error = escape("You can't have an empty list item")
+        expected_error = escape(EMPTY_LIST_ERROR)
         self.assertContains(response, expected_error)
+
+    def test_displays_item_form(self):
+        list_ = List.objects.create()
+        response = self.client.get('/lists/%d/' % (list_.id,))
+        self.assertIsInstance(response.context['form'], ItemForm)
+        self.assertContains(response, 'name="text"')
+
+    def test_form_save_handles_saving_to_a_list(self):
+        list_ = List.objects.create()
+        form = ItemForm(data={'text': 'testlol'})
+        new_item = form.save(for_list=list_)
+        self.assertEqual(new_item, Item.objects.first())
+        self.assertEqual(new_item.text, 'testlol')
+        self.assertEqual(new_item.list, list_)
