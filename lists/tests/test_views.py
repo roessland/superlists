@@ -137,3 +137,16 @@ class ListViewTest(TestCase):
         self.assertEqual(new_item, Item.objects.first())
         self.assertEqual(new_item.text, 'testlol')
         self.assertEqual(new_item.list, list_)
+
+    def test_duplicate_item_validation_errors_end_up_on_lists_page(self):
+        list_ = List.objects.create()
+        item = Item.objects.create(list=list_, text="textey")
+        response = self.client.post(
+            '/lists/%d/' % (list_.id,),
+            data = {'text': "textey"}
+        )
+
+        expected_error = escape("You've already got this in your list")
+        self.assertContains(response, expected_error)
+        self.assertTemplateUsed(response, "lists/list.html")
+        self.assertEqual(Item.objects.count(), 1)
