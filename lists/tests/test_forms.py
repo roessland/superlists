@@ -48,7 +48,6 @@ class ExistingListItemFormTest(TestCase):
         self.assertFalse(form.is_valid(), "Form should be invalid, since a duplicate item exists")
         self.assertEqual(form.errors['text'], [DUPLICATE_ITEM_ERROR])
 
-    @unittest.skip
     def test_form_save(self):
         list_ = List.objects.create()
         form = ExistingListItemForm(for_list=list_, data={'text': 'testlol'})
